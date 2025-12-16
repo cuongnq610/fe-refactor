@@ -1,9 +1,9 @@
-import { type FC, type ReactElement, type ReactNode, cloneElement } from 'react';
+import { type FC, type ReactElement, type ReactNode, cloneElement, isValidElement } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { cn } from '@/utils';
 
-import { assign } from 'lodash-es';
+import { merge } from 'lodash-es';
 
 import { useSchema } from '../Provider';
 
@@ -24,21 +24,21 @@ export const FormControl: FC<FormControlProps> = ({ children, label, name, class
       name={name}
       control={control}
       render={({ field, fieldState }) => {
-        // The priority of children props is higher than field.
-        // Normally the react-hook-form will handle the changing value, but with special cases it should be handled outside
-        const forwardedProps = assign(field, children.props);
-
         const error = fieldState.error;
+        const isRequired = requiredFields.includes(field.name);
 
-        const require = requiredFields.includes(field.name);
+        // Merge field props with any existing props on the child element
+        // Child's explicit props override field props (e.g., custom onChange handlers)
+        const childProps = isValidElement(children) ? children.props : {};
+        const mergedProps = merge(field, childProps);
 
         return (
           <div className={cn('flex w-full flex-col gap-1', className)}>
             <label>
-              {require && <span className="text-red-600">* </span>}
+              {isRequired && <span className="text-red-600">* </span>}
               {label}
             </label>
-            {cloneElement(children, { ...forwardedProps })}
+            {cloneElement(children, mergedProps)}
             {error && <div className={cn('self-start text-sm text-red-600')}>{error.message}</div>}
           </div>
         );

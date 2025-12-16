@@ -1,3 +1,3 @@
-import type { GENDER } from "@/constants";
+import type { GENDER } from '@/constants';
 
-export type Gender = keyof typeof GENDER
+export type Gender = ValueOf<typeof GENDER>;

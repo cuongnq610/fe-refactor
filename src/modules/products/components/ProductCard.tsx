@@ -2,50 +2,51 @@ import type { FC } from 'react';
 
 import { Card } from '@/components';
 
-import { get } from 'lodash-es';
-
-import type { ProductSchema } from '../schema';
+import {
+  type ProductSchema,
+  isShampooProduct,
+  isShoesProduct,
+  isSodaProduct,
+} from '../schema';
 
 export type ProductCardProps = {
   product: ProductSchema;
 };
 
 export const ProductCard: FC<ProductCardProps> = ({ product }) => {
-  const name = get(product, 'name');
-  const brand = get(product, 'brand');
-  const price = get(product, 'price');
-  const flavor = get(product, 'flavor');
-  const scent = get(product, 'scent');
-  const packageType = get(product, 'packageType');
-  const servingSize = get(product, 'servingSize');
-  const bottleSize = get(product, 'bottleSize');
-  const shoeSize = get(product, 'shoeSize');
-  const shoeColor = get(product, 'shoeColor');
-  const gender = get(product, 'gender');
+  const { name, brand, price } = product;
 
   return (
     <Card className="w-72 bg-[#1c1c1c]">
       <span className="product-name">{name}</span>
-      {flavor && (
+      {isSodaProduct(product) && product.flavor && (
         <>
-          - <span>{flavor}</span>
+          - <span>{product.flavor}</span>
         </>
       )}
-      {scent && (
+      {isShampooProduct(product) && product.scent && (
         <>
-          - <span>{scent}</span>
+          - <span>{product.scent}</span>
         </>
       )}
       <p className="product-brand">Brand: {brand}</p>
-      {packageType && servingSize && (
+      {isSodaProduct(product) && product.packageType && product.servingSize && (
         <div className="product-brand">
-          Size: {packageType}, {servingSize}
+          Size: {product.packageType}, {product.servingSize}
         </div>
       )}
-      {bottleSize && <div className="product-info">Size: {bottleSize}</div>}
-      {shoeSize && <div className="product-info">Size: {shoeSize} ( European )</div>}
-      {shoeColor && <div className="product-info">Color: {shoeColor}</div>}
-      {gender && <div className="product-info">Gender: {gender}</div>}
+      {isShampooProduct(product) && product.bottleSize && (
+        <div className="product-info">Size: {product.bottleSize}</div>
+      )}
+      {isShoesProduct(product) && product.shoeSize && (
+        <div className="product-info">Size: {product.shoeSize} ( European )</div>
+      )}
+      {isShoesProduct(product) && product.shoeColor && (
+        <div className="product-info">Color: {product.shoeColor}</div>
+      )}
+      {isShoesProduct(product) && product.gender && (
+        <div className="product-info">Gender: {product.gender}</div>
+      )}
       Price: <span className="product-price">{price}$</span>
     </Card>
   );

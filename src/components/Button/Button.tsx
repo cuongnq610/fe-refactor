@@ -3,7 +3,7 @@ import type { ButtonHTMLAttributes, FC } from "react";
 
 export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement>;
 
-export const Button: FC<ButtonProps> = ({ className, ...rest }) => {
+export const Button: FC<ButtonProps> = ({ className, children, ...rest }) => {
   return (
     <button
       className={cn(
@@ -12,6 +12,8 @@ export const Button: FC<ButtonProps> = ({ className, ...rest }) => {
         className
       )}
       {...rest}
-    ></button>
+    >
+      {children}
+    </button>
   );
 };

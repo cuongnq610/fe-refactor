@@ -4,11 +4,16 @@ import { ControlFactory } from '@/modules/products/components/ControlFactory';
 import { PRODUCT_TYPE } from '@/constants';
 import { FormProvider, useForm } from 'react-hook-form';
 import type { FC, ReactNode } from 'react';
+import { SchemaProvider } from '@/components/Provider';
 
 // Wrapper component to provide form context
 const Wrapper: FC<{ children: ReactNode }> = ({ children }) => {
   const methods = useForm();
-  return <FormProvider {...methods}>{children}</FormProvider>;
+  return (
+    <FormProvider {...methods}>
+      <SchemaProvider>{children}</SchemaProvider>
+    </FormProvider>
+  );
 };
 
 describe('ControlFactory Component', () => {

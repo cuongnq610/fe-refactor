@@ -6,6 +6,8 @@ export const PRODUCT_TYPE = {
     Shoes: 'Shoes'
 } as const
 
+export const PRODUCT_TYPE_VALUES = Object.values(PRODUCT_TYPE);
+
 export const PRODUCT_TYPE_OPTIONS: Option[] = [
     {
         label: 'Soda',

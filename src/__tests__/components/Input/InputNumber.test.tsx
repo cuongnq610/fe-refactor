@@ -1,10 +1,27 @@
 import { render, fireEvent } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { InputNumber } from '@/components/Input';
+import { useState } from 'react';
+
+// Wrapper for testing controlled component behavior
+const ControlledInputNumber = (props: React.ComponentProps<typeof InputNumber>) => {
+  const [value, setValue] = useState(props.value ?? '');
+  return (
+    <InputNumber
+      {...props}
+      value={value}
+      onChange={(event) => {
+        const newValue = typeof event === 'string' ? event : event.target.value;
+        setValue(newValue);
+        props.onChange?.(newValue);
+      }}
+    />
+  );
+};
 
 describe('InputNumber Component', () => {
   it('should accept numeric input', () => {
-    const { container } = render(<InputNumber />);
+    const { container } = render(<ControlledInputNumber />);
     const input = container.querySelector('input') as HTMLInputElement;
 
     fireEvent.change(input, { target: { value: '123' } });
@@ -12,7 +29,7 @@ describe('InputNumber Component', () => {
   });
 
   it('should accept decimal input by default', () => {
-    const { container } = render(<InputNumber />);
+    const { container } = render(<ControlledInputNumber />);
     const input = container.querySelector('input') as HTMLInputElement;
 
     fireEvent.change(input, { target: { value: '123.45' } });
@@ -20,7 +37,7 @@ describe('InputNumber Component', () => {
   });
 
   it('should reject decimal input when allowDecimal is false', () => {
-    const { container } = render(<InputNumber allowDecimal={false} />);
+    const { container } = render(<ControlledInputNumber allowDecimal={false} />);
     const input = container.querySelector('input') as HTMLInputElement;
 
     fireEvent.change(input, { target: { value: '123.45' } });
@@ -29,7 +46,7 @@ describe('InputNumber Component', () => {
   });
 
   it('should accept negative numbers by default', () => {
-    const { container } = render(<InputNumber />);
+    const { container } = render(<ControlledInputNumber />);
     const input = container.querySelector('input') as HTMLInputElement;
 
     fireEvent.change(input, { target: { value: '-123' } });
@@ -37,7 +54,7 @@ describe('InputNumber Component', () => {
   });
 
   it('should reject negative numbers when allowNegative is false', () => {
-    const { container } = render(<InputNumber allowNegative={false} />);
+    const { container } = render(<ControlledInputNumber allowNegative={false} />);
     const input = container.querySelector('input') as HTMLInputElement;
 
     fireEvent.change(input, { target: { value: '-123' } });
@@ -46,7 +63,7 @@ describe('InputNumber Component', () => {
   });
 
   it('should reject non-numeric input', () => {
-    const { container } = render(<InputNumber />);
+    const { container } = render(<ControlledInputNumber />);
     const input = container.querySelector('input') as HTMLInputElement;
 
     fireEvent.change(input, { target: { value: 'abc' } });
@@ -58,5 +75,23 @@ describe('InputNumber Component', () => {
     const input = container.querySelector('input') as HTMLInputElement;
 
     expect(input.value).toBe('42');
+  });
+
+  it('should call onChange with valid value', () => {
+    const handleChange = vi.fn();
+    const { container } = render(<ControlledInputNumber onChange={handleChange} />);
+    const input = container.querySelector('input') as HTMLInputElement;
+
+    fireEvent.change(input, { target: { value: '456' } });
+    expect(handleChange).toHaveBeenCalledWith('456');
+  });
+
+  it('should not call onChange with invalid value', () => {
+    const handleChange = vi.fn();
+    const { container } = render(<ControlledInputNumber onChange={handleChange} />);
+    const input = container.querySelector('input') as HTMLInputElement;
+
+    fireEvent.change(input, { target: { value: 'abc' } });
+    expect(handleChange).not.toHaveBeenCalled();
   });
 });

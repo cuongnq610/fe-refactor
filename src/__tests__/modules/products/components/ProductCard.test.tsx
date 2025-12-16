@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { ProductCard } from '@/modules/products/components/ProductCard';
-import { PRODUCT_TYPE } from '@/constants';
+import { GENDER, PACKAGE_TYPE, PRODUCT_TYPE } from '@/constants';
 import type { ProductSchema } from '@/modules/products/schema';
 
 describe('ProductCard Component', () => {
@@ -12,13 +12,9 @@ describe('ProductCard Component', () => {
       price: '1.99',
       brand: 'Coca Cola Co',
       flavor: 'Lemon',
-      packageType: 'Bottle',
+      packageType: PACKAGE_TYPE.GlassBottle,
       servingSize: '500ml',
-      bottleSize: '',
-      shoeColor: '',
-      shoeSize: '',
-      scent: '',
-      gender: '',
+      gender: GENDER.Male,
     };
 
     render(<ProductCard product={mockProduct} />);
@@ -35,12 +31,7 @@ describe('ProductCard Component', () => {
       brand: 'Procter & Gamble',
       scent: 'Mint',
       bottleSize: '500ml',
-      flavor: '',
-      packageType: '',
-      servingSize: '',
-      shoeColor: '',
-      shoeSize: '',
-      gender: '',
+      gender: GENDER.Male,
     };
 
     render(<ProductCard product={mockProduct} />);
@@ -57,12 +48,7 @@ describe('ProductCard Component', () => {
       brand: 'Nike',
       shoeColor: 'Black',
       shoeSize: '42',
-      gender: 'Male',
-      flavor: '',
-      packageType: '',
-      servingSize: '',
-      bottleSize: '',
-      scent: '',
+      gender: GENDER.Male,
     };
 
     render(<ProductCard product={mockProduct} />);
@@ -80,13 +66,9 @@ describe('ProductCard Component', () => {
       price: '1',
       brand: '',
       flavor: '',
-      bottleSize: '',
-      packageType: '',
-      servingSize: '',
-      shoeColor: '',
-      shoeSize: '',
-      scent: '',
-      gender: '',
+      bottleSize:  '',
+      packageType: PACKAGE_TYPE.Can,
+      gender: GENDER.Male,
     };
 
     render(<ProductCard product={mockProduct} />);

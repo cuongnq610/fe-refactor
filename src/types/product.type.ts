@@ -1,3 +1,3 @@
-import type { PRODUCT_TYPE } from "../constants";
+import type { PRODUCT_TYPE } from '../constants';
 
-export type ProductType = keyof typeof PRODUCT_TYPE
+export type ProductType = ValueOf<typeof PRODUCT_TYPE>;

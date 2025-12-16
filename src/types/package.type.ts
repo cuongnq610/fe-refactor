@@ -1,3 +1,3 @@
-import type { PACKAGE_TYPE } from "@/constants";
+import type { PACKAGE_TYPE } from '@/constants';
 
-export type PackageType = keyof typeof PACKAGE_TYPE
+export type PackageType = ValueOf<typeof PACKAGE_TYPE>;

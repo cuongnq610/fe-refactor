@@ -1,12 +1,12 @@
 import { type FieldValues, FormProvider, type FormProviderProps } from 'react-hook-form';
 
-import type { ZodObject } from 'zod';
+import type { ZodTypeAny } from 'zod';
 
 import { SchemaProvider } from '../Provider';
 
 export type FormProps<T extends FieldValues> = FormProviderProps<T> & {
   className?: string;
-  schema?: ZodObject;
+  schema?: ZodTypeAny;
 };
 
 export const Form = <TFieldValues extends FieldValues>({

@@ -56,8 +56,10 @@ describe('Select Component', () => {
       { label: 'Option 2', value: 'opt2' },
     ];
 
+    // Using defaultValue for uncontrolled test - avoids React warning about
+    // controlled component without onChange
     const { container } = render(
-      <Select options={options} value="opt2" />
+      <Select options={options} defaultValue="opt2" />
     );
 
     const select = container.querySelector('select') as HTMLSelectElement;

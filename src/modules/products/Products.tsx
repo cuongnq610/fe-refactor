@@ -1,25 +1,29 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 
 import { Form, FormControl, Select } from '@/components';
 import { Input, InputNumber } from '@/components';
 import { PRODUCT_TYPE_OPTIONS } from '@/constants';
-import type { ProductType } from '@/types';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { ControlFactory, ProductList, SubmitButton } from './components';
-import { type ProductSchema, defaultValues, generateSchema } from './schema';
+import {
+  DEFAULT_PRODUCT_TYPE,
+  type ProductSchema,
+  generateSchema,
+  getDefaultValues,
+} from './schema';
 
 export const Products = () => {
-  const [schema, setSchema] = useState(generateSchema(defaultValues.productType));
+  const [schema, setSchema] = useState(generateSchema(DEFAULT_PRODUCT_TYPE));
 
   const methods = useForm<ProductSchema>({
-    defaultValues,
+    defaultValues: getDefaultValues(DEFAULT_PRODUCT_TYPE),
     resolver: zodResolver(schema),
   });
 
-  const { control, getValues, setValue, reset, handleSubmit } = methods;
+  const { control, reset, handleSubmit } = methods;
 
   const productType = useWatch({
     control,
@@ -28,25 +32,17 @@ export const Products = () => {
 
   const [allProducts, setAllProducts] = useState<Array<ProductSchema>>([]);
 
-  const clearForm = useCallback(() => {
-    const productType = getValues('productType');
-    reset();
-    setValue('productType', productType);
-  }, [reset, getValues, setValue]);
-
-  const regenerateSchema = useCallback((_productType: ProductType) => {
-    setSchema(generateSchema(_productType));
-  }, []);
-
+  // When product type changes, update schema and reset form with new defaults
   useEffect(() => {
-    clearForm();
-    regenerateSchema(productType);
-  }, [productType, clearForm, regenerateSchema]);
+    const newSchema = generateSchema(productType);
+    setSchema(newSchema);
+    reset(getDefaultValues(productType));
+  }, [productType, reset]);
 
   const onSubmit = () => {
     const formValues = methods.getValues();
     setAllProducts(prev => [...prev, formValues]);
-    clearForm();
+    reset(getDefaultValues(productType));
   };
 
   return (

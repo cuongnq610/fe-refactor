@@ -10,6 +10,7 @@ export const ProductList: FC<ProductListProps> = ({ products }) => {
   return (
     <div className="flex flex-col gap-3 max-h-[80vh] overflow-auto">
       {products.map((product, index) => (
+        // This product list is added only so we can use index as key
         <ProductCard key={index} product={product} />
       ))}
     </div>

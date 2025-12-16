@@ -4,11 +4,16 @@ import { FormControl } from '@/components/Form';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Input } from '@/components/Input';
 import type { FC, ReactNode } from 'react';
+import { SchemaProvider } from '@/components/Provider';
 
 // Wrapper to provide form context
 const FormWrapper: FC<{ children: ReactNode }> = ({ children }) => {
   const methods = useForm();
-  return <FormProvider {...methods}>{children}</FormProvider>;
+  return (
+    <FormProvider {...methods}>
+      <SchemaProvider>{children}</SchemaProvider>
+    </FormProvider>
+  );
 };
 
 describe('FormControl Component', () => {

@@ -3,9 +3,7 @@ import {
   type PropsWithChildren,
   createContext,
   useContext,
-  useEffect,
   useMemo,
-  useState,
 } from 'react';
 
 import { getRequiredFields } from '@/utils';
@@ -16,26 +14,16 @@ import { type ZodTypeAny } from 'zod';
 type SchemaContextType = {
   schema: ZodTypeAny | undefined;
   requiredFields: string[];
-  setSchema: (schema: ZodTypeAny) => void;
 };
 
-const SchemaContext = createContext<SchemaContextType | undefined>({
-  schema: undefined,
-  requiredFields: [],
-  setSchema: () => {},
-});
+const SchemaContext = createContext<SchemaContextType | undefined>(undefined);
 
 export type SchemaProviderProps = PropsWithChildren & {
   schema?: ZodTypeAny;
 };
 
-export const SchemaProvider: FC<SchemaProviderProps> = ({ schema: schemaProps, children }) => {
-  const [schema, setSchema] = useState<ZodTypeAny | undefined>(schemaProps);
-
-  useEffect(() => {
-    setSchema(schemaProps);
-  }, [schemaProps]);
-
+export const SchemaProvider: FC<SchemaProviderProps> = ({ schema, children }) => {
+  // Derive required fields directly from prop - no need for internal state
   const requiredFields = useMemo(() => {
     return schema ? getRequiredFields(schema) : [];
   }, [schema]);
@@ -44,7 +32,6 @@ export const SchemaProvider: FC<SchemaProviderProps> = ({ schema: schemaProps, c
     <SchemaContext.Provider
       value={{
         schema,
-        setSchema,
         requiredFields,
       }}
     >

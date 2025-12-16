@@ -4,7 +4,9 @@ export const GENDER = {
     Male: 'Male',
     Female: 'Female',
     Unisex: 'Unisex'
-}
+} as const
+
+export const GENDER_VALUES = Object.values(GENDER);
 
 export const GENDER_OPTIONS: Option[] = [
     {

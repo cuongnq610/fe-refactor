@@ -1,4 +1,4 @@
-import { type FC, useEffect, useRef, useState } from 'react';
+import { type FC, useRef } from 'react';
 
 import { validateNumber } from '@/utils';
 
@@ -10,8 +10,12 @@ export type InputNumberProps = InputProps & {
   onChange?: (value: string) => void;
 };
 
+/**
+ * Controlled number input that validates input on change.
+ * Only allows valid number characters based on allowDecimal/allowNegative options.
+ */
 export const InputNumber: FC<InputNumberProps> = ({
-  value: valueProps,
+  value,
   onChange,
   allowDecimal = true,
   allowNegative = true,
@@ -19,22 +23,19 @@ export const InputNumber: FC<InputNumberProps> = ({
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const [value, setValue] = useState<string>('');
-
-  useEffect(() => {
-    setValue(valueProps?.toString() ?? '');
-  }, [valueProps]);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
 
-    const isValid = validateNumber({ value: newValue, allowDecimal, allowNegative });
+    // Allow empty string, otherwise validate number format
+    if (newValue && !validateNumber({ value: newValue, allowDecimal, allowNegative })) {
+      return;
+    }
 
-    if (newValue && !isValid) return;
-
-    setValue(newValue);
     onChange?.(newValue);
   };
 
-  return <Input ref={inputRef} {...restProps} type="tel" value={value} onChange={handleChange} />;
+  // Normalize value to string for the input
+  const displayValue = value?.toString() ?? '';
+
+  return <Input ref={inputRef} {...restProps} type="tel" value={displayValue} onChange={handleChange} />;
 };

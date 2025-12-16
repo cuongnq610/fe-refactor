@@ -4,6 +4,10 @@ import { ZodArray, ZodNullable, ZodObject, ZodOptional, ZodDefault, type ZodType
  * Recursively gets all required field paths from a Zod schema
  * Handles nested objects, arrays, and unwraps optional/nullable/default types
  * 
+ * NOTE: Uses `as any` for Zod internal _def properties because Zod doesn't
+ * export these types publicly. This is a known limitation - if Zod changes
+ * internals, this function may need updates.
+ * 
  * @param schema - Zod schema to analyze
  * @param path - Current path traversal (used internally for recursion)
  * @returns Array of required field paths (e.g., ["name", "address.street", "items[0].id"])
